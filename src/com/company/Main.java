@@ -2,9 +2,9 @@ package com.company;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
 
 public class Main {
@@ -16,6 +16,7 @@ public class Main {
 
     public static void main(String[] args) {
         List<Thread> threads = new ArrayList<>();
+        Thread freqLog = new Thread();
         for (int i = 0; i < 1000; i++) {
             threads.add(new Thread(() -> {
                 String route = generateRoute(letters, length);
@@ -25,18 +26,16 @@ public class Main {
             threads.get(i).start();
         }
         var sortedMap = sizeToFreq.entrySet().stream()
-                .sorted(Map.Entry.comparingByValue())
-                .toArray(Map.Entry[]::new);
-        var maxKey = sortedMap[sortedMap.length - 1].getKey();
-        System.out.println(String.format("Самое частое повторение %s (встретилось %d раз)", maxKey, sizeToFreq.get(maxKey)));
+                .sorted(Entry.comparingByValue())
+                .toArray(Entry[]::new);
+        Object maxKey = sortedMap[sortedMap.length - 1].getKey();
+        System.out.printf("Самое частое повторение %s (встретилось %d раз)%n", maxKey, sizeToFreq.get((Integer) maxKey));
         System.out.println("Другие размеры:");
-        Iterator<Map.Entry<Integer, Integer>> iterator = sizeToFreq.entrySet().iterator();
-        while (iterator.hasNext()) {
-            Map.Entry<Integer, Integer> entry = iterator.next();
-            if (maxKey.equals(entry.getKey())) {
+        for (int i = sortedMap.length - 1; i >= 0; i--) {
+            if (maxKey.equals(sortedMap[i].getKey())) {
                 continue;
             }
-            System.out.println(String.format("- %d (%d раз)", entry.getKey(), entry.getValue()));
+            System.out.printf("- %d (%d раз)%n", (int) sortedMap[i].getKey(), (int) sortedMap[i].getValue());
         }
         System.out.println();
     }
@@ -66,6 +65,12 @@ public class Main {
         } else {
             int currentFreq = sizeToFreq.get(count);
             sizeToFreq.put(count, ++currentFreq);
+        }
+    }
+
+    private static void findCurrentMaxFreq() {
+        while (!Thread.interrupted()) {
+
         }
     }
 }
