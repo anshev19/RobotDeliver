@@ -58,12 +58,14 @@ public class Main {
         return count;
     }
 
-    private static synchronized void updateFreqSize(int count) {
-        if (!sizeToFreq.containsKey(count)) {
-            sizeToFreq.put(count, 1);
-        } else {
-            int currentFreq = sizeToFreq.get(count);
-            sizeToFreq.put(count, ++currentFreq);
+    private static void updateFreqSize(int count) {
+        synchronized (sizeToFreq) {
+            if (!sizeToFreq.containsKey(count)) {
+                sizeToFreq.put(count, 1);
+            } else {
+                int currentFreq = sizeToFreq.get(count);
+                sizeToFreq.put(count, ++currentFreq);
+            }
         }
     }
 }
